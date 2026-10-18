@@ -1,0 +1,49 @@
+[project]
+name = "shopassistant"
+version = "0.3.0"
+description = "Maple Market customer support — policy RAG, a SQL sub-agent, and order cancellation."
+requires-python = ">=3.11"
+dependencies = [
+    # --- v0 web stack ---
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlmodel>=0.0.22",
+    "pyjwt>=2.9",
+    "bcrypt>=4.2",
+    "python-multipart>=0.0.9",
+    "python-dotenv>=1.0",
+    "httpx>=0.27",
+    "streamlit>=1.40",
+    # --- v1 agent stack ---
+    "langchain>=1.0",
+    "langchain-openai>=0.3",
+    "langgraph>=1.0",
+    "langgraph-checkpoint-sqlite>=2.0",
+    "langchain-ollama>=0.3",
+    # --- v2: tools + RAG ---
+    "langchain-tavily>=0.2",
+    "langchain-chroma>=0.2",
+    "langchain-community>=0.3",
+    "langchain-text-splitters>=0.3",
+    # Advanced: hybrid search (BM25) + reranking (cross-encoder).
+    # EnsembleRetriever / ContextualCompressionRetriever live in langchain-classic in LC 1.0.
+    "langchain-classic>=1.0",
+    "rank-bm25>=0.2",
+    "flashrank>=0.2",
+    # Pin chromadb's OpenTelemetry exporter to a modern build; the old floor (1.11.x)
+    # ships pre-protobuf-4 generated code that crashes under current protobuf.
+    "opentelemetry-exporter-otlp-proto-grpc>=1.42",
+    # --- tracing ---
+    "langfuse>=3.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+eval = ["ragas>=0.2"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["backend/tests"]

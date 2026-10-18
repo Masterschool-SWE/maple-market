@@ -1,0 +1,10 @@
+[
+  {"question": "How many days after delivery can I return an unused item?",
+   "reference": "14 days from delivery."},
+  {"question": "Can I return an item I already opened, if there is no defect?",
+   "reference": "No. Opened or used items cannot be refunded except for a manufacturing defect."},
+  {"question": "Can I cancel an order that has already shipped?",
+   "reference": "No. Cancellation is only allowed while the order is placed or processing."},
+  {"question": "Do you deliver on Sundays?",
+   "reference": "No."}
+]

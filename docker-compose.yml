@@ -1,0 +1,51 @@
+services:
+  api:
+    build: .
+    image: shopassistant:latest
+    command: ["api"]
+    env_file: .env
+    environment:
+      DATABASE_URL: sqlite:////data/shopassistant.db
+      CHECKPOINT_DB_PATH: /data/checkpoints.db
+      CHROMA_DIR: /data/chroma
+      WORLDBOOK_DIR: /app/assets/policies
+      RETRIEVAL_MODE: basic
+    volumes:
+      - shopassistant-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 180s
+
+  streamlit:
+    image: shopassistant:latest
+    command: ["streamlit"]
+    env_file: .env
+    environment:
+      BACKEND_URL: http://api:8000
+      BACKEND_TIMEOUT: "180"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - streamlit
+    restart: unless-stopped
+
+volumes:
+  shopassistant-data:
+  caddy-data:
+  caddy-config:
